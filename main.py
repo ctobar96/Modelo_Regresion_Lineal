@@ -54,3 +54,17 @@ class Item(BaseModel):
     }
 
 """
+# -----------------------------------------
+# Usando @app.get("/") definimos un método GET para el endpoint / (que sería como el "home")
+@app.get("/")
+def home():
+    return {
+        "message": "Service up ✅",
+        "endpoints": {
+            "docs": "http://localhost:8000/docs"
+        }
+    }
+
+
+
+
