@@ -30,14 +30,27 @@ app = FastAPI(title='Implementando un modelo de Machine Learning usando FastAPI'
 
 # Creamos una clase para el vector de features de entrada
 class Item(BaseModel):
-    pickup_weekday: float
-    pickup_hour: float
-    work_hours: float
-    pickup_minute: float
-    passenger_count: float
-    trip_distance: float
-    trip_time: float
-    trip_speed: float
-    PULocationID: float
-    DOLocationID: float
-    RatecodeID: float
+    price: int
+    area: int
+    bedrooms: int
+    bathrooms: int
+    stories: int
+    guestroom: int
+    hotwaterheating: int
+    airconditioning: int
+    parking: int
+"""
+    "guestroom":{
+        "yes": 0,
+        "no": 1
+    },
+    "hotwaterheating":{
+        "yes": 0,
+        "no": 1 
+    },
+    "airconditioning":{
+        "yes": 0,
+        "no": 1 
+    }
+
+"""
