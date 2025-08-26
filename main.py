@@ -110,4 +110,6 @@ resp = requests.post(
     json=item_features
 )
 resp.raise_for_status()
-print("Predicción:", resp.json()["predicted_class"])
+data = resp.json()
+print("Predicción:", data["predicted_class"])
+print("Threshold aplicado:", data["used_confidence"])
