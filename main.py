@@ -1,14 +1,14 @@
 import joblib
 import numpy as np
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import logging
 
 linearRegression = joblib.load("./model/linearRegression.joblib")
 
  # crea un logger
-+logging.basicConfig(level=logging.INFO)
-+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def predict_price(features_trip, confidence=0.5):
     """Recibe un vector de características de hospedaje y predice 
@@ -42,6 +42,7 @@ class Item(BaseModel):
     hotwaterheating: int
     airconditioning: int
     parking: int
+    confidence: float = 0.5  # valor por defecto si no se envía
 """
     "guestroom":{
         "yes": 0,
@@ -71,16 +72,14 @@ def home():
 # ----------------------------------------------------------------------------------------------------------
 # Este endpoint maneja la lógica para estimar
 @app.post("/predict")
-def prediction(item: Item, confidence: float):
+def prediction(item: Item):
     try:
         # Correr el modelo de Regresión lineal
         features_trip = np.array([item.price, item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
                                 item.hotwaterheating, item.airconditioning, item.parking])
 
-        pred = predict_price(features_trip, confidence)
-        logger.info(f"Predicción realizada: {pred} con confianza {confidence}")
-        
-        # Transmitir la respuesta de vuelta al cliente
+        pred = predict_price(features_trip, item.confidence)
+        logger.info(f"Predicción realizada: {pred} con confianza {item.confidence}")
         
         # Retornar el resultado de la predicción
         return {'predicted_class': pred}
