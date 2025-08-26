@@ -1,8 +1,7 @@
 import joblib
 import numpy as np
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
-import requests
 import logging
 
 linearRegression = joblib.load("./model/linearRegression.joblib")
@@ -90,26 +89,6 @@ def prediction(item: Item, confidence: float):
         raise HTTPException(status_code=500, detail="Error interno en la predicción")
 
 # ----------------------------------------------------------------------------------------------------------
-#DATOS DE ENTRADA
-item_features = {
-    "price": 15210000,
-    "area": 8502, 
-    "bedrooms": 5,
-    "bathrooms": 2,
-    "stories": 2,
-    "guestroom": 0,
-    "hotwaterheating": 1,
-    "airconditioning": 0,
-    "parking": 2
-}
 
-url = "https://modelo-regresion-lineal.onrender.com/predict"
 
-resp = requests.post(
-    url, 
-    json=item_features
-)
-resp.raise_for_status()
-data = resp.json()
-print("Predicción:", data["predicted_class"])
-print("Threshold aplicado:", data["used_confidence"])
+
