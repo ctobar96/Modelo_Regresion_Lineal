@@ -7,7 +7,9 @@ import logging
 
 linearRegression = joblib.load("./model/linearRegression.joblib")
 
-
+ # crea un logger
++logging.basicConfig(level=logging.INFO)
++logger = logging.getLogger(__name__)
 
 def predict_price(features_trip, confidence=0.5):
     """Recibe un vector de características de hospedaje y predice 
@@ -83,7 +85,7 @@ def prediction(item: Item, confidence: float):
         
         # Retornar el resultado de la predicción
         return {'predicted_class': pred}
-    except:
+    except Exception as e:
         logger.error(f"Error en /predict: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Error interno en la predicción")
 
@@ -108,4 +110,4 @@ resp = requests.post(
     json=item_features
 )
 resp.raise_for_status()
-print("Predicción:", resp.json()["prediction"])
+print("Predicción:", resp.json()["predicted_class"])
