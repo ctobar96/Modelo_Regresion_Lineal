@@ -1,4 +1,5 @@
 # Despliegue de un modelo de Machine Learning como API
+**URL pública: https://modelo-regresion-lineal.onrender.com**
 En esta tarea deberás tomar uno de los modelos de Machine Learning que hayas desarrollado durante el programa de magíster y convertirlo en un producto de datos funcional, accesible mediante una API construida con FastAPI y desplegada en Render, siguiendo las buenas prácticas vistas en clases.
 
 ## Objetivo
@@ -49,8 +50,6 @@ uv pip install -r requirements.txt
 
 
 ## Despliegue de la API en Render
-
-**URL pública: https://modelo-regresion-lineal.onrender.com**
 
 ### Pasos para desplegar
 1. Añadir un archivo requirements.txt actualizado.

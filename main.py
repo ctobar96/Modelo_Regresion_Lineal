@@ -10,20 +10,37 @@ linearRegression = joblib.load("./model/linearRegression.joblib")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def predict_price(features_trip, confidence=0.5):
-    """Recibe un vector de características de hospedaje y predice 
-       si el hospedaje tiene un valor alto.
-
-    Argumentos:
-        features_trip (array): Características del hospedaje, vector de tamaño 11.
-        confidence (float, opcional): Nivel de confianza. Por defecto es 0.5.
+def predict_price_continuous(features: np.ndarray) -> float:
     """
+    Devuelve un valor continuo predicho por un modelo de regresión lineal.
+
+    Args:
+      features: array 1D con n_features (shape: (n_features,))
+
+    Returns:
+      Valor numérico predicho (float).
+    """
+    # Asegura la forma (1, n_features)
+    X = features.reshape(1, -1)
     
-    pred_value = linearRegression.predict_proba(features_trip.reshape(1, -1))[0][1]
-    if pred_value >= confidence:
-      return 1
-    else:
-      return 0
+    try:
+        # predict() devuelve un array, tomamos el primer elemento
+        raw_pred = linearRegression.predict(X)[0]
+        pred_value = float(raw_pred)  # JSON-friendly
+        return pred_value
+
+    except ValueError as ve:
+        logger.error(
+            "predict_price_continuous: shape mismatch. "
+            "Esperado (%d,), recibido %s",
+            linearRegression.coef_.shape[0],
+            features.shape,
+        )
+        raise HTTPException(status_code=422, detail="Invalid feature vector shape")
+
+    except Exception as exc:
+        logger.exception("Error al predecir precio de regresión")
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
   
 
 # Asignamos una instancia de la clase FastAPI a la variable "app".
@@ -70,17 +87,17 @@ def home():
 
 # ----------------------------------------------------------------------------------------------------------
 # Este endpoint maneja la lógica para estimar
-@app.post("/predict")
+@app.post("/predict_price")
 def prediction(item: Item, confidence: float):
     
     # Correr el modelo de Regresión lineal
-    features_trip = np.array([item.price, item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
+    arr = np.array([item.price, item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
                                 item.hotwaterheating, item.airconditioning, item.parking])
 
-    pred = predict_price(features_trip, confidence)
+    price = predict_price_continuous(arr)
         
     # Retornar el resultado de la predicción
-    return {'predicted_class': pred}
+    return {'predicted_price': price}
 
 # ----------------------------------------------------------------------------------------------------------
 
