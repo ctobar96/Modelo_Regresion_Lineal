@@ -37,7 +37,34 @@ Con el entorno activado, instala todas las dependencias directamente desde requi
 uv pip install -r requirements.txt
 ```
 
-## Ejecutar el jupyter
+
+## Archivos principales
+- main.py: arranque de la aplicación, carga del modelo y definición de rutas.
+
+- client.ipynb: Prueba con datos de ejemplo.
+
+- model/linearRegression.joblib: modelo previamente entrenado serializado con Joblib.
+
+- requirements.txt: lista de dependencias necesarias.
 
 
-## Implementación de la API en FastAPI 
+## Despliegue de la API en Render
+
+**URL pública: https://modelo-regresion-lineal.onrender.com**
+
+### Pasos para desplegar
+1. Añadir un archivo requirements.txt actualizado.
+
+2. En el dashboard de Render, crear un Web Service apuntando al repositorio.
+
+3. Configurar:
+
+- Build Command: pip install -r requirements.txt
+
+- 4. Start Command: uvicorn main:app --host 0.0.0.0 --port $PORT
+
+Render reconstruye e inicia automáticamente la API.
+
+
+## Pruebas desde un Cliente Externo (30 puntos)
+Se incluye client.ipynb (o client.py) que realiza tres peticiones distintas y muestra datos enviados y respuestas.
