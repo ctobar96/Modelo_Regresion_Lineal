@@ -1,7 +1,9 @@
 import joblib
 import numpy as np
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+import requests
+import logging
 
 linearRegression = joblib.load("./model/linearRegression.joblib")
 
@@ -69,13 +71,38 @@ def home():
 # Este endpoint maneja la lógica para estimar
 @app.post("/predict")
 def prediction(item: Item, confidence: float):
-    # Correr el modelo de Regresión lineal
-    features_trip = np.array([item.price, item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
-                              item.hotwaterheating, item.airconditioning, item.parking])
+    try:
+        # Correr el modelo de Regresión lineal
+        features_trip = np.array([item.price, item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
+                                item.hotwaterheating, item.airconditioning, item.parking])
 
-    pred = predict_price(features_trip, confidence)
-    
-    # Transmitir la respuesta de vuelta al cliente
-    
-    # Retornar el resultado de la predicción
-    return {'predicted_class': pred}
+        pred = predict_price(features_trip, confidence)
+        logger.info(f"Predicción realizada: {pred} con confianza {confidence}")
+        
+        # Transmitir la respuesta de vuelta al cliente
+        
+        # Retornar el resultado de la predicción
+        return {'predicted_class': pred}
+    except:
+        logger.error(f"Error en /predict: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Error interno en la predicción")
+
+# ----------------------------------------------------------------------------------------------------------
+#DATOS DE ENTRADA
+item_features = {
+    "price": 15210000,
+    "area": 8502, 
+    "bedrooms": 5,
+    "bathrooms": 2,
+    "stories": 2,
+    "guestroom": 0,
+    "hotwaterheating": 1,
+    "airconditioning": 0,
+    "parking": 2
+}
+
+url = "https://modelo-regresion-lineal.onrender.com/predict"
+
+resp = requests.post(url, json=item_features)
+resp.raise_for_status()
+print("Predicción:", resp.json()["prediction"])
