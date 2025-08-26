@@ -42,7 +42,6 @@ class Item(BaseModel):
     hotwaterheating: int
     airconditioning: int
     parking: int
-    confidence: float = 0.5  # ahora es opcional en el JSON
 """
     "guestroom":{
         "yes": 0,
