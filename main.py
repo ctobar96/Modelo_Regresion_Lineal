@@ -103,6 +103,9 @@ item_features = {
 
 url = "https://modelo-regresion-lineal.onrender.com/predict"
 
-resp = requests.post(url, json=item_features)
+resp = requests.post(
+    f"{url}?confidence=0.9", 
+    json=item_features
+)
 resp.raise_for_status()
 print("Predicción:", resp.json()["prediction"])
