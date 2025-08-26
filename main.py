@@ -54,7 +54,7 @@ class Item(BaseModel):
     }
 
 """
-# -----------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 # Usando @app.get("/") definimos un método GET para el endpoint / (que sería como el "home")
 @app.get("/")
 def home():
@@ -65,7 +65,7 @@ def home():
         }
     }
 
-#---------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 # Este endpoint maneja la lógica para estimar
 @app.post("/predict")
 def prediction(item: Item, confidence: float):
