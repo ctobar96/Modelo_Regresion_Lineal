@@ -42,7 +42,7 @@ class Item(BaseModel):
     hotwaterheating: int
     airconditioning: int
     parking: int
-    confidence: float = 0.5  # valor por defecto si no se envía
+    confidence: float = 0.5  # ahora es opcional en el JSON
 """
     "guestroom":{
         "yes": 0,
@@ -72,20 +72,16 @@ def home():
 # ----------------------------------------------------------------------------------------------------------
 # Este endpoint maneja la lógica para estimar
 @app.post("/predict")
-def prediction(item: Item):
-    try:
-        # Correr el modelo de Regresión lineal
-        features_trip = np.array([item.price, item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
+def prediction(item: Item, confidence: float):
+    
+    # Correr el modelo de Regresión lineal
+    features_trip = np.array([item.price, item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
                                 item.hotwaterheating, item.airconditioning, item.parking])
 
-        pred = predict_price(features_trip, item.confidence)
-        logger.info(f"Predicción realizada: {pred} con confianza {item.confidence}")
+    pred = predict_price(features_trip, confidence)
         
-        # Retornar el resultado de la predicción
-        return {'predicted_class': pred}
-    except Exception as e:
-        logger.error(f"Error en /predict: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Error interno en la predicción")
+    # Retornar el resultado de la predicción
+    return {'predicted_class': pred}
 
 # ----------------------------------------------------------------------------------------------------------
 
