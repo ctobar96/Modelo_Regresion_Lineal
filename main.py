@@ -45,12 +45,11 @@ def predict_price_continuous(features: np.ndarray) -> float:
 
 # Asignamos una instancia de la clase FastAPI a la variable "app".
 # Interacturaremos con la API usando este elemento.
-app = FastAPI(title='Implementando un modelo de Machine Learning usando FastAPI')
+app = FastAPI(title="Modelo de Regresión Lineal - FastAPI")
 
 
 # Creamos una clase para el vector de features de entrada
 class Item(BaseModel):
-    price: int
     area: int
     bedrooms: int
     bathrooms: int
@@ -79,10 +78,9 @@ class Item(BaseModel):
 @app.get("/")
 def home():
     return {
-        "message": "Service up ✅",
-        "endpoints": {
-            "docs": "http://localhost:8000/docs"
-        }
+        "message": "✅ API lista",
+        "docs": "http://localhost:8000/docs",
+        "Proyecto GitHub": "https://github.com/ctobar96/Modelo_Regresion_Lineal.git"
     }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -91,7 +89,7 @@ def home():
 def prediction(item: Item, confidence: float):
     
     # Correr el modelo de Regresión lineal
-    arr = np.array([item.price, item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
+    arr = np.array([item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
                                 item.hotwaterheating, item.airconditioning, item.parking])
 
     price = predict_price_continuous(arr)
