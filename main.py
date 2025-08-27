@@ -86,7 +86,7 @@ def home():
 # ----------------------------------------------------------------------------------------------------------
 # Este endpoint maneja la lógica para estimar
 @app.post("/predict_price")
-def prediction(item: Item, confidence: float):
+def prediction(item: Item):
     
     # Correr el modelo de Regresión lineal
     arr = np.array([item.area, item.bedrooms, item.bathrooms, item.stories, item.guestroom, 
